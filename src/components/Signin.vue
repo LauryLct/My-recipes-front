@@ -15,7 +15,7 @@
           <input type='password' class='form-control' v-model='password' id='password' placeholder='Password'>
         </div>
 
-        <button type='submit' class='btn btn-primary'> submit</button>
+        <button type='submit' class='btn btn-primary' v-on:click='signin'> submit</button>
         <div class="p-3">
           <router-link class="text-secondary" to='/signup'>Sign Up</router-link>
         </div>
@@ -43,8 +43,8 @@ export default {
     this.checkSignIn()
   },
   methods: {
-    signin() {
-      this.$http.plain.post('/signin', {email: this.email, passord: this.passord })
+    signin () {
+      this.$http.plain.post('/signin', { email: this.email, password: this.password })
       .then(response => this.signinSuccesful(response))
       .catch(error => this.signinFailed(error))
     },
@@ -55,6 +55,9 @@ export default {
       }
       localStorage.csrf = response.data.csrf
       localStorage.signedIn = true
+      let user = response.config.data
+      let userEmail = JSON.parse(user)
+      localStorage.user = userEmail.email
       this.error = ''
       this.$router.replace('/recipes')
     },
